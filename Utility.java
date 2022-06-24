@@ -6,9 +6,7 @@ public class Utility implements Serializable {
 	int linkId;
 	int spotId;
 	boolean isFull; // whether the spot is full or not
-	double dDist; // the distance of the spot (link) to the car
-	double wDist; // the distance of the spot to the destination of the car
-	double value; // the utility of the spot (link) for the car
+	double driveDist, walkDist, score;
 	/**
 	 * Default constructor
 	 */
@@ -18,52 +16,33 @@ public class Utility implements Serializable {
 	public Utility(int linkId, int spotId, boolean isFull, double driveDist, double walkDist) {
 		this.linkId = linkId;
 		this.spotId = spotId;
-		isFull = _isFull;
-		dDist = _dDist;
-		wDist = _wDist;
-		value = _value;
+		this.isFull = isFull;
+		this.driveDist = driveDist;
+		this.walkDist = walkDist;
 	}
 
-	public void setLinkID(int _linkID) {
-		linkID = _linkID;
+
+	public void setStatus(boolean isFull) {
+		this.isFull = isFull;
 	}
 
-	public void setSpotID(int _spotID) {
-		spotID = _spotID;
-	}
-
-	public void setStatus(boolean _isFull) {
-		isFull = _isFull;
-	}
-
-	public void setdDist(double _dDist) {
-		dDist = _dDist;
-	}
-
-	public void setwDist(double _wDist) {
-		wDist = _wDist;
-	}
-
-	public void setValue() {
+	public void setScore() {
 		if (isFull == true) {
-			value = ( dDist + 2 * wDist) / 1000;
+			score = (driveDist + 2 * walkDist) / 1000;
 		} else {
-			value = ( dDist + 2 * wDist - 10000) / 1000; // it implies that the importance of the parking
+			score = (driveDist + 2 * walkDist - 10000) / 1000; // it implies that the importance of the parking
 																	// availability dominates the distance
 		}
 	}
 
-	public void setValue(double _value) {
-		value = _value;
-	}
 
-	public void setUtility(Utility _UT) {
-		linkID = _UT.linkID;
-		spotID = _UT.spotID;
-		isFull = _UT.isFull;
-		dDist = _UT.dDist;
-		wDist = _UT.wDist;
-		value = _UT.value;
+	public void setUtility(Utility o) {
+		this.linkId = o.linkId;
+		this.spotId = o.spotId;
+		this.isFull = o.isFull;
+		this.driveDist = o.driveDist;
+		this.walkDist = o.walkDist;
+		this.score = o.score;
 	}
 
 	@Override
