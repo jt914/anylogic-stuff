@@ -2,87 +2,92 @@ public class calcMethod{
 
 
 
-Link tempLink;
-ParkingSpot tempSpot;
-
-Point carPos;
-ArrayList<Link> nextLinks = car.link.nextLinks;
-ArrayList<ParkingSpot> spots = new ArrayList<ParkingSpot>();
-ArrayList<calculator> calc1 = new ArrayList<calculator>();	
-
-Method Math = new Method();
-
-carPos.setLatLon(car.getX(), car.getY());
-for(int i = 0; i < nextLinks.size(); i++)
-{
-	tempLink = nextLinks.get(i);
-	for(int j = 0; j < tempLink.spots.size(); j++)	//obtain the information of the associated parking lot
-	{
-		tempSpot = tempLink.spots.get(j);
-		calc1.add(new CalcScore(tempLink.Id, tempSpot.Id, !tempSpot.pFull, Math.distanceTo(tempSpot.pos,carPos), Math.distanceTo(tempSpot.pos,car.dest.pos)));
-	}
-
-
-CalcScore best = new CalcScore();
-best.setValue(10000);		//set the disutility to be a large enough value
-for(int i = 0; i < calc1.size(); i++)
-{
-	if(calc1.get(i).value < 10000)
-	{
-		best.setUtility(calc1.get(i)); 	//obtain the minimum disutility
-	}
-}
-
-if(!best.isFull)		//if there is available parking space associated with the minimum disutility link
-{
-	car.setSpot(netSpot[best.spotId]);		//set the parking spot as the objective parking spot for this car
-	car.setWalkingTime(best.walkDist/4);	//set the walking time (m/s)
-	netSpot[best.spotId].cParked();		// change the status of the objective parking spot to be parked, in case it is assigned to the other cars
-	return true;
-}
-// else
-// {
-// 	double totalDisutility = 0;
-// 	for(int i = 0; i < _listUT2.size(); i++)
-// 	{
-// 		totalDisUT = totalDisUT + exp(-_listUT2.get(i).value);
-// 	}
+	Link tempLink;
+	ParkingSpot tempSpot;
 	
-// 	double rnd = uniform();
-// 	double _tempUT;
-// 	ArrayList<Double> sumDisUT = new ArrayList<Double>();
-// 	for(int i = 0; i < _listUT2.size(); i++)
-// 	{
-// 		_tempUT = 0;
-// 		for(int j = 0; j < i; j++)
-// 		{
-// 			_tempUT = _tempUT + exp(-_listUT2.get(j).value);
-// 		}
-// 		sumDisUT.add(_tempUT);
-// 	}
-
-// 	for(int i = 0; i < sumDisUT.size(); i++)
-// 	{
-// 		if(i < sumDisUT.size() - 1)
-// 		{
-// 			if(rnd >= sumDisUT.get(i)/totalDisUT && rnd < sumDisUT.get(i+1)/totalDisUT)
-// 			{
-// 				car.setObjLink(_nextLinks.get(i));
-// 			}
-// 		}
-// 		else
-// 		{
-//  			if(rnd >= sumDisUT.get(i)/totalDisUT)
-// 			{
-// 				car.setObjLink(_nextLinks.get(i));
-// 			}
-// 		}
+	Point carPos;
+	ArrayList<Link> nextLinks = car.link.nextLinks;
+	ArrayList<ParkingSpot> spots = new ArrayList<ParkingSpot>();
+	ArrayList<CalcScore> calc1 = new ArrayList<CalcScore>();	
+	
+	Method Math = new Method();
+	
+	carPos.setLatLon(car.getX(), car.getY());
+	for(int i = 0; i < nextLinks.size(); i++)
+	{
+		tempLink = nextLinks.get(i);
+		for(int j = 0; j < tempLink.spots.size(); j++)	//obtain the information of the associated parking lot
+		{
+			tempSpot = tempLink.spots.get(j);
+			calc1.add(new CalcScore(tempLink.Id, tempSpot.Id, !tempSpot.pFull, Math.distanceTo(tempSpot.pos,carPos), Math.distanceTo(tempSpot.pos,car.dest.pos)));
+		}
+		}
+	
+	
+	CalcScore best = new CalcScore();
+	best.setValue(10000);		//set the disutility to be a large enough value
+	for(int i = 0; i < calc1.size(); i++)
+	{
+		if(calc1.get(i).value < 10000)
+		{
+			best.setUtility(calc1.get(i)); 	//obtain the minimum disutility
+		}
+	}
+	
+	if(!best.isFull)		//if there is available parking space associated with the minimum disutility link
+	{
+		car.setSpot(netSpot[best.spotId]);		//set the parking spot as the objective parking spot for this car
+		car.setWalkingTime(best.walkDist/4);	//set the walking time (m/s)
+		netSpot[best.spotId].cParked();		// change the status of the objective parking spot to be parked, in case it is assigned to the other cars
+		return true;
+	}
+	else{
+	return false;
+	}
+	// else
+	// {
+	// 	double totalDisutility = 0;
+	// 	for(int i = 0; i < _listUT2.size(); i++)
+	// 	{
+	// 		totalDisUT = totalDisUT + exp(-_listUT2.get(i).value);
+	// 	}
 		
-// 	}
-
-// 	return false;
-// }
-
+	// 	double rnd = uniform();
+	// 	double _tempUT;
+	// 	ArrayList<Double> sumDisUT = new ArrayList<Double>();
+	// 	for(int i = 0; i < _listUT2.size(); i++)
+	// 	{
+	// 		_tempUT = 0;
+	// 		for(int j = 0; j < i; j++)
+	// 		{
+	// 			_tempUT = _tempUT + exp(-_listUT2.get(j).value);
+	// 		}
+	// 		sumDisUT.add(_tempUT);
+	// 	}
+	
+	// 	for(int i = 0; i < sumDisUT.size(); i++)
+	// 	{
+	// 		if(i < sumDisUT.size() - 1)
+	// 		{
+	// 			if(rnd >= sumDisUT.get(i)/totalDisUT && rnd < sumDisUT.get(i+1)/totalDisUT)
+	// 			{
+	// 				car.setObjLink(_nextLinks.get(i));
+	// 			}
+	// 		}
+	// 		else
+	// 		{
+	//  			if(rnd >= sumDisUT.get(i)/totalDisUT)
+	// 			{
+	// 				car.setObjLink(_nextLinks.get(i));
+	// 			}
+	// 		}
+			
+	// 	}
+	
+	// 	return false;
+	// }
 }
-}
-
+	
+	
+	
+	
